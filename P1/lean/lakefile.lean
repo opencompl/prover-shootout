@@ -1,14 +1,11 @@
 import Lake
 open Lake DSL
 
-package «Shootout» where
+package «Main» where
   -- add package configuration options here
 
-lean_lib «Shootout» where
+@[default_target]
+lean_lib «Main» where
   -- add library configuration options here
 
 require LeanSAT from git "https://github.com/leanprover/leansat" @ "main"
-
-@[default_target]
-lean_exe «shootout» where
-  root := `Main
