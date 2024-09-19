@@ -8,6 +8,7 @@ We port the file to Lean for comparison.
 -/
 
 import LeanSAT
+import Main.Ackermannize
 open BitVec
 
 /--
@@ -216,6 +217,7 @@ info: 'bitmask_lemma' depends on axioms: [propext, Classical.choice, Lean.ofRedu
   ⟹
   P m
 -/
+-- set_option trace.ack true in
 theorem less_6E (m : BitVec 64) (P : BitVec 64 → Bool)
     (h : m ≤ 0x00000006 ∧
          P 0x00000000 ∧
@@ -226,14 +228,8 @@ theorem less_6E (m : BitVec 64) (P : BitVec 64 → Bool)
          P 0x00000005 ∧
          P 0x00000006) :
     P m := by
-  obtain ⟨m, hm⟩ := m
-  simp_all [BitVec.le_def]
-  -- this proof is unfortunate, it's surely golfable,
-  -- and one would hope that the automation would do better.
-  obtain hm | hm | hm | hm | hm | hm | hm : m = 0 ∨ m = 1 ∨ m = 2 ∨ m = 3 ∨
-    m = 4 ∨ m = 5 ∨ m = 6 := by omega
-  repeat (simp [hm] at h ⊢; simp [h])
+  ack
+  bv_decide
 
-/-- info: 'less_6E' depends on axioms: [propext, Quot.sound] -/
+/-- info: 'less_6E' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms less_6E
-
